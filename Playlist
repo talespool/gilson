@@ -1,0 +1,86 @@
+package com.example.aslkjaoibacjk;
+
+import javax.swing.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Playlist {
+    private ArrayList<String> playlist;
+
+    // cria um arquivo .txt
+    public void criarPlaylist(String nome) {
+        try {
+            File arquivo = new File(nome + ".txt");
+            if (arquivo.createNewFile()) {
+                System.out.println("Criou");
+            } else if (arquivo.exists()) {
+                JOptionPane.showMessageDialog(null, "Uma playlist com esse nome já existe", "Aviso", JOptionPane.ERROR_MESSAGE);
+                System.out.println("Já existe uma playlist com esse nome");
+            } else {
+                System.out.println("nada");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // bota informações no arquivo escolhido
+    public void preencherPlaylist(String nome) {
+        try {
+            File arquivo = new File(nome + ".txt");
+
+            if (arquivo.canRead()) {
+                FileWriter escritor = new FileWriter(arquivo, true);
+                escritor.write(JOptionPane.showInputDialog("Digite o nome da musica:") + "\n");
+                escritor.close();
+            } else {
+                System.out.println("Arquivo não encontrado");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // lê as informações do arquivo e coloca no array playlist
+    public void lerPlaylist(String nome) {
+        Scanner ler = new Scanner(System.in);
+        try {
+            File arquivo = new File(nome + ".txt");
+
+            if (arquivo.canRead()) {
+                FileReader leitor = new FileReader(arquivo);
+                while(ler.hasNext()){
+                    playlist.add(ler.nextLine());
+                }
+                leitor.close();
+            } else {
+                System.out.println("Arquivo não encontrado");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // teoricamente iria remover uma linha baseado na posição, provavelmente não funciona ainda
+    public void removerDaPlaylist(String nome, int posicao) {
+        lerPlaylist(nome);
+        playlist.remove(posicao);
+    }
+
+    public ArrayList<String> getPlaylist() {
+        return playlist;
+    }
+
+    // main feita só pra testar, mas acho q a função lerPlaylist está presa num loop infinito
+    public static void main(String[] args) {
+        Playlist test = new Playlist();
+        test.criarPlaylist(JOptionPane.showInputDialog("Digite o nome da playlist para criar:"));
+        test.preencherPlaylist(JOptionPane.showInputDialog("Digite o nome da playlist para preencher:"));
+        test.preencherPlaylist(JOptionPane.showInputDialog("Digite o nome da playlist para preencher:"));
+        test.lerPlaylist(JOptionPane.showInputDialog("Digite o nome da playlist para ler:"));
+        System.out.println(test.getPlaylist());
+    }
+}
